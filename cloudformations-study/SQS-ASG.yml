@@ -1,0 +1,217 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "FullText Reindex System Cloudformation - SQS, IndexWorker"
+
+Parameters:
+  AZ1:
+    Description: "Availability Zone 1"
+    Type: "String"
+    AllowedValues: 
+      - "a"
+      - "b"
+      - "c"
+    Default: "b"
+  AZ2:
+    Description: "Availability Zone 2"
+    Type: "String"
+    AllowedValues: 
+      - "a"
+      - "b"
+      - "c"
+    Default: "c"
+  VPC: 
+    Type: "String",
+    Default: "vpc-00574969"
+    Description: "VPC ID"
+  IndexWorkerMin: 
+    Type: "Number"
+    Description: "Minimum size to scale to"
+    Default": "1"
+  IndexWorkerMax: 
+    Type: "Number"
+    Description: "Mximum size to scale to"
+    Default": "5"
+  KeyName:
+    Type: "String"
+    Default: "porters-hrbc-key"
+    Description: "Name of the key-pair to assign to the new instances"
+  ProtectedSubnet1: 
+    Type: "String"
+    Default: "subnet-b9fd03d1"
+    Description: "Subnet ID where created EC2 instance is in AZ2"
+  ProtectedSubnet2:
+    Type: "String"
+    Default: "subnet-b4fd03dc"
+    Description: "Subnet ID where created EC2 instance is in AZ2"
+  PauseTime: 
+    Type: "String"
+    Description: "The pause time between scaling events"
+    Default: "PT12M5S"
+  TopicHrbcWarning:
+    Type: "String"
+    Description: "HRBC Warning notification ARN"
+    Default: "arn:aws:sns:ap-northeast-1:158514931692:hrbc-admin-warning"
+  IndexWorkerAMI: 
+    Type: "String"
+    Description : "EC2 instance AMI id"
+    Default: ""
+  IndexWorkerInstanceType:
+    Type: "String"
+    Description: "EC2 instance type"
+    Default: "t1.nano"
+  KeyName: 
+    Type: "String"
+    Default: "porters-hrbc-key"
+    Description: "Name of the key-pair to assign to the new instances"
+  MaintenanceGroup: 
+    Type: "String"
+    Default: "sg-fe07e391"
+    Description: "EC2 security group id for service instances."
+  NatGroup: 
+    Type: "String"
+    Default: "sg-4028332c"
+    Description: "EC2 security group id for service instances."
+
+
+Resource:
+
+  #Create New IAM Profile and Role for Index Worker Instance
+  IndexWorkerRole:
+    Type: "AWS::IAM::Role"
+    Propertise:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+                - "autoscaling.amazonaws.com",
+                - "ec2scheduled.amazonaws.com",
+                - "elasticloadbalancing.amazonaws.com",
+                - "spot.amazonaws.com",
+                - "spotfleet.amazonaws.com",
+                - "transitgateway.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+  IndexWorkerRolePolicies:
+    Type: "AWS::IAM::Policy"
+    Propertise:
+      PolicyName: "IndexWorkerPolicy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Action: "*"
+            Resource: "*"
+      Roles:
+        -
+          !Ref "IndexWorkerRole"
+  IndexWorkerInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: "/"
+      Roles:
+        -
+          !Ref: "IndexWorkerRole"
+
+  #Create Security Group
+  IndexWorkerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: "IndexWorker Instance Security Group"
+      VpcId: !Ref "VPC"
+      SecurityGroupIngress: 
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 10.0.0.0/16 
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 192.168.11/23
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp:
+        
+  #Create RE-Index Queue
+  ReindexQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: "search-fulltext-reindex-1-0"
+      #delay of message send
+      DelaySeconds: 0
+      # 64KB
+      MaximumMessageSize: 65536
+      # Timeout
+      VisibilityTimeout: 60
+      # RetentionPeriod
+      MessageRetentionPeriod: 259200
+      # waiting time of Index-worker
+      ReceiveMessageWaitTimeSeconds: 20
+      # Use Dead Letter Queue
+      RedrivePolicy: 
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - "search-fulltext-reindex-dead"
+            - "Arn"
+          maxReceiveCount: 10
+  
+  #Create SNS Subscription and Filter
+  SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Propertise:
+      Endpoint: !GetAtt "ReindexQueue.Arn"
+      Protocol: "sqs"
+      RawMessageDelivery: "ture"
+      TopicArn: !GetAtt HRBC-reindex-SNS.Arn
+      DeliveryPolicy:
+
+  #Create AutoScaling Launch Config
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !Ref "IndexWorkerAMI"
+      InstanceMonitoring: true
+      InstanceType: !Ref "IndexWorkerInstanceType"
+      IamInstanceProfile: !Ref "IndexWorkerRole"
+      KeyName: !Ref: "KeyName"
+
+
+  #Create AutoScaling Group
+  IndexWorkerAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Propertise:
+      AvailabilityZones:
+        - !Join 
+          - ""
+          - - !Ref "AWS::Region"
+            - !Ref "AZ1"
+        - !Join
+          - ""
+          - - !Ref "AWS::Region"
+            - !Ref "AZ2"
+      DesiredCapacity: 
+        !Ref "IndexWorkerMin"
+      HealthCheckGracePeriod: 60
+      HealthCheckType: "EC2"
+      MinSize: !Ref: "IndexWorkerMin"
+      MaxSize: !Ref: "IndexWorkerMin"
+      VPCZoneIdentifier:
+        - !Ref "ProtectedSubnet1"
+        - !Ref "ProtectedSubnet2"
+      UpdatePolicy:
+        AutoScalingRollingUpdate:
+          MinInstancesInService: 1
+          MaxBatchSize: 1
+          PauseTime: !Ref "PauseTime"
+      NotificationConfiguration:
+          TopicARN: !Ref "TopicHrbcWarning"
+          NotificationTypes: 
+            - "autoscaling:EC2_INSTANCE_LAUNCH"
+            - "autoscaling:EC2_INSTANCE_LAUNCH_ERROR"
+            - "autoscaling:EC2_INSTANCE_TERMINATE"
+            - "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
