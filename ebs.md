@@ -16,6 +16,10 @@ EBS는 EC2 인스턴스에서 제공하는 기본 용량 보다 더 사용해야
 - EBS volumes support live configuration changes while in production which means that you can modify the volume type, volume size, and IOPS capacity without service interruptions.
 - Amazon EBS encryption uses 256-bit Advanced Encryption Standard algorithms (AES-256)
 - EBS Volumes offer 99.999% SLA.
+  
+## Multi-attach feature
+- 한 EBS를 복수의 EC2 인스턴스에 attach 하여 쉐어할 수 있는 기능이 있다.
+- 그러나 Provisioned IOPS EBS로 설정해야하므로 비용이 비싸다는 단점이 있다.
 
 ## EBS의 기본개념
 - Volume: EBS의 가장 기본적인 형태로 OS에서 바로 사용 가능한 형태
