@@ -28,17 +28,22 @@ Dynamo DB
         - __Global secondary index (GSI)__: An index with a partition key and sort key that can be differnt from those on the table
         - __Local secondary index (LSI)__: An index that has the same partition key as the table, but a different sort key
     - You can define up to 5 global secondary indexes and 5 local secondary indexes per table.
-- __DynamoDB Streams__: an optional feature that captures data modification events in DynamoDB tables
-    - The naming convention for DynamoDB Streams endpoints is _streams.dynamodb..amazonaws.com_
-    - Each event is represented by a _stream record_, and captures the following events:
-        - A new item is added to the table: captures an image of the entire item, including all of its attributes.
-        - An item is updated: captures the "before" and "after" image of any attributes that were modified in the item.
-        - An item is deleted from the table: captures an image of the entire item before it was deleted.
-    - Each stream record also contains the name of the table, the event timestamp, and other metadata
-    - Stream records are organized into groups, or __shards__. Each shard acts as a container for multiple stream records, and contains information required for accessing and iterating through these records.
-    - Stream records have a **lifetime of 24 hours**; after that, they are automatically removed from the stream.
-    - You can use **DynamoDB Streams together with AWS Lambda to create a _trigger_**, which is a code that executes automatically whenever an event of interest appears in a stream.
-    - DynamoDB Streams enables powerful solutions such as **data replication within and across Regions**, **materialized views of data in DynamoDB tables**, **data analysis using Kinesis materialized views**, and much more.
+
+## DynamoDB Streams: 
+- an **optional feature** that captures data modification events in DynamoDB tables. 옵셔널 기능이므로 기본적으로 비활성 상태. 사용을 위한 활성화 반드시 필요.
+- 다이나모DB 테이블 아이템 변경에 대한 **정렬된 정보 흐름(ordered flow of information)**.
+- 애플리케이션이 테이블에 생성/변경/삭제 아이템을 발생시킬때마다, 다이나모DB 스트림즈는 변경된 아이템의 primary key 속성이 포함된 스트림 레코드를 작성한다. 이 스트림 레코드는 다이나모디비 테이블의 각 아이템의 데이터 변경사항에 대한 정보를 담고 있다. 또한 스트림 레코드가 추가적 정보를 캡쳐하도록 설정 또한 가능하다. ex 수정된 아이템의 'before'와 'after' 이미지.
+- AWS 람다와 통합하여 다이나모디비 스트림즈의 이벤트에 자동으로 반응하는 trigger도 생성할 수 있다. 이 트리거로 다이나모디비 테이블 데이터 변경에 반응하는 애플리케이션도 만들 수 있다. 람다와 스트림 ARN을 엮어놓으면, 즉시 테이블에 변경사항이 생겼을때 테이블 스트림에 새로운 스트림 레코드가 등록되고 람다는 해당 스트림을 polling하여 동기적으로 람다 함수를 동작시킨다.
+- The naming convention for DynamoDB Streams endpoints is _streams.dynamodb..amazonaws.com_
+- Each event is represented by a _stream record_, and captures the following events:
+    - A new item is added to the table: captures an image of the entire item, including all of its attributes.
+    - An item is updated: captures the "before" and "after" image of any attributes that were modified in the item.
+    - An item is deleted from the table: captures an image of the entire item before it was deleted.
+- Each stream record also contains the name of the table, the event timestamp, and other metadata
+- Stream records are organized into groups, or __shards__. Each shard acts as a container for multiple stream records, and contains information required for accessing and iterating through these records.
+- Stream records have a **lifetime of 24 hours**; after that, they are automatically removed from the stream.
+- You can use **DynamoDB Streams together with AWS Lambda to create a _trigger_**, which is a code that executes automatically whenever an event of interest appears in a stream.
+- DynamoDB Streams enables powerful solutions such as **data replication within and across Regions**, **materialized views of data in DynamoDB tables**, **data analysis using Kinesis materialized views**, and much more.
 ![dynamodb_streams](./images/dynamodb_streams.png)
 ![dynamodb_stream_with_triggers](./images/dynamodb_stream_with_trigger.png)
 
