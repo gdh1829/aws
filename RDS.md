@@ -2,6 +2,17 @@ RDS: Relational Database Service
 ===
 ![RDS_BASIC_ARCHITECT](./images/RDS_Architecture.png)
 
+## Enabling IAM DB authentication
+- 요청 시 아마존 RDS가 생성하는 유니크한 고유 문자열.
+- AWS Signature Version 4를 사용하여 생성됨.
+- 15분의 lifetime
+- 해당 기능을 통해 데이터베이스에 유저 크레덴셜을 따로 저장할 필요가 없음. IAM을 통하여 외부에서 관리되므로.
+- IAM DB 인증을 사용하면서도 또한 데이터베이스 네이티브 인증도 그대로 사용 가능.
+- 사용시 이점
+  - from/to DB 네트워크 트래픽이 SSL(Secure Sockets layer)을 사용하여 암호화.
+  - 데이터베이스로의 접근 관리를 IAM을 통해 중앙화, 개별 DB 인스턴스에 개별 관리가 아닌.
+  - EC2 애플리케이션인 경우, profile 크레덴셜을 사용해 특정 인스턴스만 접근할 수 있도록 제한 가능, 패스워드 방식 대신에. 
+
 ## RI(Reserved Instance)
 Light: good for short term development 
 Medium: good for 24/7 running but it has fluctuation
