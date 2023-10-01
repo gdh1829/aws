@@ -178,16 +178,6 @@ Lambda deployment configuration types to specify how traffic is shifted from the
     - If you store data in a columnar format, Redshift Spectrum scans only the columns needed by your query, rather than processing entire rows.
     - If you compress your data using one of Redshift Spectrum's supported compression algorithms, less data is scaned.
 
-## EFS
-![amazon efs](../images/efs.png)
-- Amazon Elastic File System (EFS) provides simple, scalable, elastic file storage for use with AWS Cloud services and on-premises resources.
-- When mounted on Amazon EC2 instances, an Amazon EFS file system provides a standard file system interface and file system access semantics, allowing you to seamlessly integrate Amazon EFS with your existing applications and tools.
-- Multiple Amazon EC2 instances can acess an Amazon EFS at the same time, allowing Amazon EFS to provide a common data source for workloads and applications running on more than one Amazon EC2 instance.
-- Example: there is a fleet of On-Demand EC2 instances that stores file doucments from the users to one of the attached EBS volumes. 
-    - Problem: The system performance is quite slow because the architecture doesn't provide the EC2 instances a parellel shared access to the file documents.
-    - Solution: Remember that an EBS volume can be attached to one EC2 instance at a time, hence, no ther EC2 instance can connect to that EBS Provisioned IOPS volume. Take note as well that the type of storage needed here is a "file storage" which means that S3 is not the best service to use because it is mainly used for "object storage", and S3 does not provide the notion of "folders" too.
-    ※ ElastiCache is an in-memory data store that improves the performance of your applications, which is not what you need since it is not a file storage.
-
 ## CloudTrail
 ![amazon cloudtrail](../images/cloudtrail.png)
 - service that enables governance, compliance, operational auditing, and risk auditing of your AWS account. With CloudTrail, you can log, continuously monitor, and retain account activity related to actions across your AWS infrastructures.
