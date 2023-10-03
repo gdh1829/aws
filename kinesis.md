@@ -19,7 +19,11 @@ Easily collect, process, and analyze video and data streams in real time, so you
     - You can create Directed Acyclic Graphs (DAGs) of Amazon Kinesis Applications and data streams.
     - In this scenario, one or more Amazon Kinesis Applications can add data to another Amazon Kinesis data stream for further processing, enabling successive stages of stream processing.  
 ![dag](./images/dag.png)
-> Directed Acyclic Graphs (DAGs): 직역하면 '방향성 비 사이클' 그래프이며 방향을 가지되, 루프를 생성하지 않는 그래프를 말한다. 여기서 루프, 또는 사이클이란 자기 자신에서 출발해서 다시 자신에게 도아오는 경로를 말하며 비 사이클이므로 이러한 경로가 없어야 한다. DAG는 중요한 용도를 가지는데, 일반적으로 작업의 우선 순위를 표현할 때 DAG의 구조를 가지게 된다. 예를 들어, 집을 지을 때 기초 공사나 기둥 세우기, 인테리어 등을 해야한다. 이때, 기둥을 세우기 전에 인테리어를 할 수 없듯이 다른 것보다 선행되어야 하는 것들을 표현하기 위해 DAG가 유용하게 사용된다. 만약 이러한 우선 순위를 표현한 그래프에서 사이클이 존재한다면 해당 작업은 영원히 끝나지 않는다. DAG에서는 우선순위를 표현하기 위해 **위상 정렬**을 사용한다. 위상 정렬이란, 작업을 실제로 한번에 하나씩 순서대로 처리한다면 어떤 순서로 작업해야 하느냐를 표현한 것이다. 이러한 위상 정렬을 위해 조건이 있는데, 노드의 순서가 왼쪽에서 오른쪽 방향으로 향해야한다. 역방향 노드가 있다면 올바른 작업 순서가 될 수 없다. 위상 정렬은 시작값에 따라 여러 가지로 표현될 수 있고 결론적으로 답이 하나로 유효하지 않다.
+> Directed Acyclic Graphs (DAGs): 직역하면 '방향성 비 사이클' 그래프이며 방향을 가지되, 루프를 생성하지 않는 그래프를 말한다. 여기서 루프, 또는 사이클이란 자기 자신에서 출발해서 다시 자신에게 도아오는 경로를 말하며 비 사이클이므로 이러한 경로가 없어야 한다. 
+> 
+> DAG는 중요한 용도를 가지는데, 일반적으로 작업의 우선 순위를 표현할 때 DAG의 구조를 가지게 된다. 예를 들어, 집을 지을 때 기초 공사나 기둥 세우기, 인테리어 등을 해야한다. 이때, 기둥을 세우기 전에 인테리어를 할 수 없듯이 다른 것보다 선행되어야 하는 것들을 표현하기 위해 DAG가 유용하게 사용된다. 만약 이러한 우선 순위를 표현한 그래프에서 사이클이 존재한다면 해당 작업은 영원히 끝나지 않는다.
+>  
+> DAG에서는 우선순위를 표현하기 위해 **위상 정렬**을 사용한다. 위상 정렬이란, 작업을 실제로 한번에 하나씩 순서대로 처리한다면 어떤 순서로 작업해야 하느냐를 표현한 것이다. 이러한 위상 정렬을 위해 조건이 있는데, 노드의 순서가 왼쪽에서 오른쪽 방향으로 향해야한다. 역방향 노드가 있다면 올바른 작업 순서가 될 수 없다. 위상 정렬은 시작값에 따라 여러 가지로 표현될 수 있고 결론적으로 답이 하나로 유효하지 않다.
 
 
 ## What can you build with Amazon Kinesis?  

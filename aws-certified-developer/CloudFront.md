@@ -1,6 +1,16 @@
 CloudFront
 ---
 
+## Signed URLs and Singed Cookies
+- 프라이빗 컨텐트에 대한 제한적 유저의 접근 허용 방식
+- Signed URLs
+  - RTMP(Real Time Messaging Protocol) Distribution을 원할 경우.(Signed Cookies는 지원하지 않음)
+  - **개별 파일**에 대한 접근 제어를 원할 경우
+  - Cookie 방식을 클라이언트가 지원하지 않는 경우
+- Singed Cookies
+  - **복수의 제한적 파일**에 대한 접근 제어를 원할 경우
+  - 현재의 URLs을 변경하고 싶지 않은 경우
+
 ## Lambda@Edge
 ![lambdaedge.png](./images/lambda_edge.png)
 - a feature of Amazon CloudFront that lets you run code closer to users of your application, which improves performance and reduces latency.  
