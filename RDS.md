@@ -30,10 +30,18 @@ DB 버전 업데이트 또는 패치는 필수적인 것(보안 패치)만 적�
 DB 인스턴스 클래스를 변경했다면, 이 시간에 적용. 인스턴스 클래스가 변경되는 동안 DB 인스턴스의 실행이 중지됨.
 
 ## Multi-AZ 복제와 Failover
-Multi-AZ 복제를 사용했을 때는 Standby 인스턴스에서 백업을 진행하게 되므로 메인 인스턴스의 I/O 성능에 영향 없음.
+**Multi-AZ 복제를 사용했을 때는 Standby 인스턴스에서 백업을 진행하게 되므로 메인 인스턴스의 I/O 성능에 영향 없음.**
 Failover: Multi-AZ 복제를 사용하도록 설정 뒤, 메인 DB 인스턴스에 장애(AZ 장애, 인스턴스 중단, 네트워크 장애, 스토리지 장애)가 발생하면 자동으로 Standby 인스턴스가 메인 인스턴스로 승격.
 Failover downtime 3~6 minutes
 Failover 기능이 동작하면 Endpoint 주소가 가리키는 DB 인스턴스가 메인 인스턴스에서 standby 인스턴스로 바뀌므로 Endpoint를 사용하는 측에서는 Failover를 위해 따로 설정해줄 필요가 없음.
+
+## Multi-AZ vs Read Replica
+- 동기 복제(높은 내구성) vs 비동기 복제(높은 확장성)
+- 프라이머리 인스턴스의 데이터베이스 엔진만 active 상태 vs 모든 RR가 접근 가능하고 읽기 스케일링에 사용됨
+- standby로부터 자동 백업 vs 디폴트 자동 백업 not configured
+- 항상 한 리전의 두 AZ로 확장 vs 싱글AZ, 크로스AZ, 크로스Region 일 수 있음.
+- 프라이머리 인스턴스에서 디비 엔진 버전 업그레이드 발생 vs 소스 인스턴스로부터 디비 엔진 버전 업은 독립적
+- 문제 발생시 standby로 자동 failover vs 매뉴얼 인스턴스 프로모션
 
 ## RDS DB 인스턴스 STOP
 EC2와 달리 RDS DB 인스턴스는 정지 개념이 없으며, Delete를 해야한다. 단, DB 인스턴스를 삭제할 때는 Final DB Snapshot을 생성할 수 있어, Final DB Snapshot으로 다시 DB 인스턴스를 생성하여 이전 데이터 그대로 시작 가능.
