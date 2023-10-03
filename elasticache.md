@@ -12,16 +12,20 @@ In-Memeory Cache는 모든 데이터를 메모리에 올려 놓는 것이 특징
 ## ElastiCache의 두 가지 캐시 엔진
  - Memcached
     - Region의 AZ 별로 생성 가능
-    - Memcached cluster는 노드를 계속 추가 할 수록 데이터를 저장할 수 있는 공간이 늘어남.
+    - **Memcached cluster는 노드를 계속 추가 할 수록 데이터를 저장할 수 있는 공간이 늘어남.**
     - Snapshot과 Read Replica 지원 X
  - Redis
-    - Memcached와 달리 클러스터 구성 불가. 따라서 노드를 추가한다고 해서 저장할 수 있는 전체 메모리 용량이 늘어나지는 않음
+    - Memcached와 달리 **클러스터 구성 불가**. 따라서 노드를 추가한다고 해서 저장할 수 있는 전체 메모리 용량이 늘어나지는 않음
     - 데이터를 저장 할 수 있는 메모리 용량은 각 캐시 노드가 제공하는 메모리 용량에 한함.
-    - Snapshot과 Read Replica 지원 O
+    - **Snapshot과 Read Replica 지원 O**
     - Read Replica는 마스터 캐시 노드(Primary)에 장애가 발생하면 자동으로 Read Replica가 마스터 캐시 노드로 승격되는 Failover 기능 작동
     - Read Replica는 Replication Group이라는 논리적인 개념이 안에 위치
     - Read Replica는 한 Region 안에서 여러 AZ에 생성 가능.
     - Redis 캐시 노드가 제공하는 메모리 용량을 넘어서는 데이터를 저장하기 위해서는 애플리케이션 레벨에서 데이터를 여러 캐시 노드에 분산하여 저장하는 Sharding을 구현해야 함.
+    - Redis `AUTH` command
+      - Authenticate the users using Redis AUTH by creating a new Redis Cluster with both the `--transit-encryption-enabled` and `--auth-token` parameters enabled.
+      - 패스워드로 보호되는 레디스 서버에 레디스를 실행하는데 있어 권한을 수락받기 전에 유저로 하여금 패스워드를 입력하도록 요구하여 데이터 보안 향상 가능.
+      - 패스워드 보호 레디스 서버에 유저가 패스워드를 입력하도록 요구하기 위해서는 replication group 또는 cluster를 생성할 때와 replication group 또는 cluster에 대한 모든 후속 명령에 올바른 패스워드와 함께 --auth-token 파라미터를 포함시켜야 한다.
 
 ※Sharding
 일반적인 데이터베이스와 마찬가지로 인 메모리 캐시도 샤딩을 구현할 수 있음. 데이터 종류별로 서버를 분할하는 방식, 사용자 이름 순, 날짜 순 등으로 분할하는 방식, 해시 키를 기준으로 분할하는 방식 등 다양한 방식이 존재.
@@ -45,7 +49,7 @@ redis의 경우 [redis-cli](http://redis.io/download)라는 전용 클라이언�
 노드 타입이 cache.m1.small 이상인 경우에 한하여 Automatic Backups를 지원. 최장 35일  
 
 ## ElastiCache Failover
-ElastiCache Replication Group을 생성하여 Add Read Replica를 하면 Cluster에 Primary와 Read Replica가 나타난다.  
+**ElastiCache Replication Group을 생성하여 Add Read Replica를 하면 Cluster에 Primary와 Read Replica가 나타난다.**  
 평소에는 Primary 엔드포인트 주소가 마스터인 Primary를 가리키고 있다. 그래서 쓰기 작업은 Primary 엔드포인트 주소에 접속하여 실시.  
 Failover 기능이 동작하면 자동으로 Primary 엔드포인트 주소는 Slave를 가리키게 되고 쓰기 작업을 수행한다. 따라서 Failover를 위한 작업을 따로 하지 않아도 됌.  
 
