@@ -7,6 +7,8 @@ Data Lakes and Analytics on AWS
     -> To establish a dedicated network connection between your network and AWS, you can use __AWS Direct Connect__.  
     -> To move petabytes to exabytes of data to AWS using physical appliances, you can use __AWS Snowball__ and __AWS Snowmobile__.  
     -> To have your on-premises applications store data directly into AWS, you can use __AWS Storage Gateway__  
+        - Storage Gateway optmizes data transfer to AWS by sending only changed data and compressing data.
+        - is mainly used in providing low-latency access to data by caching frequently accessed data on-premises while storing archive data securely and durably in Amazon cloud storage services.
 - Real-time data movement  
     -> To make it simple to capture and load streaming data or IoT device data, you can use __Amazon Kinesis Data Firehose__, __Amazon Kinesis Video Streams__, and __AWS IoT Core__.  
 
