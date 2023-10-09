@@ -16,4 +16,6 @@ VPC
   - AWS에서 VPC Connection 용어의 의미는 VPC와 자체 네트워크 간의 커넥션을 일컫는다.
   - AWS는 인터넷 프로토콜 시큐리티(IPsec) VPN connections를 지원.
   - customer gateway는 고객의 자체 네트워크 사이드의 물리적 디바이스나 소프트웨어 애플리케이션을 일컫음.
-  
+
+## AWS Transit Gateway
+- 트랜짓 게이트웨는 중앙 허브를 통해 VPCs와 on-premises 네트워크를 연결하는데 사용된다.
