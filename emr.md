@@ -11,3 +11,6 @@ Amazon EMR
 - EMR enables you to quickly and easily provision as much capacity as you need, and automatically or manually add and remove capacity.
 - You can leverage multiple data stores, including S3, the Hadoop Distributed File System (HDFS), and DynamoDB.
 - EMR supports powerful and proven _Hadoop_ tools such as _Hive_, _Pig_, _HBase_, and _Impala_. Additionally, it can run distributed computing frameworks besides Hadoop MapReduve such as _Spark_ or _Presto_ using bootstrap actions. You can also use _Hue_ and _Zeppelin_ as GUIs for interacting with applications on your cluster. 
+  
+## EMRFS(EMR File System)
+- EMR이 EMR 클러스터에서 S3로 일반 파일들을 읽거나 쓰기 위한 HDFS의 구현체.
