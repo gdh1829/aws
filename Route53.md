@@ -13,10 +13,12 @@ Route53는 일반적인 DNS 서버들과 달리 아래와 같은 기능들도 �
     * 현재 위치에서 지연 시간(Latency)이 가장 낮은 리전의 IP 주소를 알려줌
     * Latency가 낮다는 것은 현재 위치에서 가장 가깝고 속도가 빠르다는 것
     * LBR을 실제 구축하기 위해서는 DNS 서버 뿐만 아니라 전 세계 곳곳에 실제 서비스 서버를 배치해야 하기 때문에 커다란 비용이 들지만, AWS의 글로벌 인프라가 있기에 Route53만으로 가능하게 되는 것.
+    * **그러나, 동일한 지역에 있는 사용자에게 동일한 위치에서 서비스를 제공한다는 보장은 없음!!**
 * __Weighted Round Robin__  
 ![Route53_LBR](./images/route53_WRR.png)
     * 서버마다 가중치(Weight)를 부여하여 traffic을 조절하는 기능
     * 가중치에 따라 클라이언트에 IP를 알려주는 비율이 달라지게 되는 것
+    * 여러 리소스를 단일 도메인 이름 또는 하위 도메인 이름에 연결하고 각 리소스로 라우팅되는 트래픽의 양을 선택할 수 있다.
 * __DNS Failover__  
 ![Route53_LBR](./images/route53_failover.png)
     * 장애가 발생한 서버의 IP 주소 또는 도메인(ELB)을 알려주지 않는 기능
@@ -27,6 +29,11 @@ Route53는 일반적인 DNS 서버들과 달리 아래와 같은 기능들도 �
     * 같은 example.com 도메인이라도 영국에서는 79.125.8.27, 브라질에서는 177.71.128.60, 한국에서는 54.92.43.31을 알려줌
     * 특히, 미국에서는 state별로 다른 IP를 알려주도록 설정도 가능
     * Route53는 CloudFront 또는 S3와 연동할 때 Zone Apex(ex. www.example.com 대신 example.com)를 지원. 일반적인 DNS에서는 CNAME(별칭 레코드)으로 연결할 때 Root Domain(ex. example.com)은 사용 불가
+    * Geolocation Routing(지리적 라우팅)
+      * 사용자의 지리적 위치, 즉 DNS 쿼리가 시작된 위치를 기반으로 트래픽을 처리하는 리소스를 선택.
+    * Geoproximity Routing(지리적 근접 라우팅)
+      * Route53이 사용자와 리소스의 지리적 위치를 기반으로 트래픽을 리소스로 라우팅.
+      * 또한 선택적으로 __bias__라는 값을 지정하여 특정 리소스에 더 많은 트래픽을 라우팅하거나 더 적은 트래픽을 라우팅하도록 선택할 수도 있다. bias는 트래픽이 리소스로 라우팅되는 지리적 영역의 크기를 확장하거나 축소한다.
 
 ## Failover
 - You can use Route53 health checking to configure active-active and active-passive failover configurations. You configure active-active failover using any routing policy (or combination of routing policies) other than failover, and you configure active-passive failover using the failover routing policy.
