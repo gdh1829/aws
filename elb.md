@@ -57,3 +57,6 @@ Classic ELB에서만 지원
 - Enable Application Generated Cookie Stickiness
     - 서버의 애플리케이션이 생성한 쿠키를 사용
     - Cookie Name: 서버의 애플리케이션이 생성한 쿠키 이름을 설정
+
+## Integrations with other services
+- AWS WAF OK, but Not AWS Network Firewall
