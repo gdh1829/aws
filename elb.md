@@ -4,6 +4,20 @@ Elastic Load Balancer
 ELB는 고가의 L4/L7 장비(로드 밸런서)를 구입하거나 소프트웨어로 서버를 구축하지 않아도 부하 분산과 고가용성(High Availability)를 제공하는 서비스  
 ELB는 외부 트래픽뿐만 아니라 인터넷이 연결되지 않는 내부 네트워크에서도 사용 가능  
 
+## SNI - Server Name Indication feature
+- 클라이언트가 연결하고자 하는 호스트네임을 포함하여 같은 IP 주소로 SSL 트래픽을 여러 도메인이 serve 가능하도록 해준다.
+- 1대의 로드밸런서 뒤에 각각 자신만의 TLS certificate을 갖고 있는 TLS-secured 애플리케이션을 호스팅할 수 있게 된다.
+- 로드밸런서가 같은 포트 상에 복수의 도메인을 지원할 수 있게 되고, 각 도메인에는 서로 다른 certificate를 제공한다.
+- SNI 사용하기 위해서는,
+  - 여러 certificates을 로드밸런서의 같은 시큐어 리스너에 바인드하면 끝!
+  - 그러면 ALB는 자동으로 각 클라이언트를 위한 최적의 TLS certificate를 선택해준다.
+  - 사용에 따른 추가비용은 없다.
+- `SAN(Subject Alternate Name)`과 비교
+  - 인증서가 다수의 여러 도메인을 지원하기는 하지만 동일한 인증 기관이 각 도메인을 인증해야 한다.
+  - 즉, 새로운 도메인을 추가할 때마다 인증서를 다시 인증하고 프로비저닝해야 한다는 것을 의미!!
+- `Wildcard certificate`방식과 비교
+  - 와일드카드는 서브도메인만 허용하는 한계.
+
 ## ELB 기본개념
 - L4(OSI Layer4)
     - OSI 레이어에서 4번째 전송 계층을 의미
