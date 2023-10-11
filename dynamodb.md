@@ -4,9 +4,12 @@ Dynamo DB
 - Offers **encyrption at rest**
 - You can create database tables that can store and retrieve any amount of data, and serve any level of request traffic
 - You can **scale up or scale down your tables' throughput capacity without downtime or performance degradation**, and use the AWS Management Console to monitor resource utilization and performance metrics.
-- Provides on-demand backup capability as well as enable **point-in-time recovery** for your DynamoDB tables. With point-in-time recovery, you can restore that table to any point in time during the __last 35 days__.
+- Provides **on-demand backup capability** as well as enable **point-in-time recovery** for your DynamoDB tables. With point-in-time recovery, you can restore that table to any point in time during the __last 35 days__.
+  - on-demand backups are available at no additional cost beyond the normal pricing that's associated with backup storage size.
+  - on-demand backups **cannot copies to a different account ro Region**. To reate backup copies across AWS accounts and Regions and for other advanced featrues, you should use **AWS Backup**.
 - All of your data is stored in partitions, backed by solid state disks (SSDs) and **automatically replicated across multiple AZs in an AWS region**, providing built-in high availablity and data durability.
 - You can create **tables that are automatically replicated across two or more AWS Regions, with full support for multi-master writes.**
+- supports DynamoDB **Gateway endpoint** not interface endpoint.
 
 ## Core Components
 - __Table__: a collection of items
