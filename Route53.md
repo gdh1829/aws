@@ -39,7 +39,7 @@ Route53는 일반적인 DNS 서버들과 달리 아래와 같은 기능들도 �
 - You can use Route53 health checking to configure active-active and active-passive failover configurations. You configure active-active failover using any routing policy (or combination of routing policies) other than failover, and you configure active-passive failover using the failover routing policy.
 ### Active-Active Failover
 - Use this failover configuration when you want all of your resources to be available the majority of the time. When a resource becomes unavailable, Route53 can detect that it's unhealthy and stop including it when responding to queries.
-- In active-active failover, all the records that have the same name, the same type (such as A or AAAA), and the same routing policy (such as weighted or latency) are active unless Route53 considers them unhealthy. Route53 can respond to a DNS query using any healthy record.
+- In active-active failover, **all the records that have the same name, the same type (such as A or AAAA), and the same routing policy (such as weighted or latency) are active** unless Route53 considers them unhealthy. Route53 can respond to a DNS query using any healthy record.
 ### Active-Passive Failover
 - User an active-passive failover configuration when you want a primary resource or group of resources to be available the majority of the time and you want a secondary resource or group of resources to be on standby in case all the primary resources.
 - When responding to queries, Route53 includes only the healthy primary resources. If all the primary resources are unhealthy, Route53 begins to include only the healthy secondary resources in response to DNS queries.
