@@ -3,6 +3,12 @@ EC2
 ## Lifecycle
 ![ec2_lifecycle](./images/ec2_lifecycle.png)
 
+## Hibernation
+- 하이버네이션은 인스턴스를 pausing and resuming의 편리함을 제공하고, 애플리케이션에 의한 startup 시간을 감소시켜 시간을 절약하고, 모든 환경과 애플리케이션을 다시 셋팅해야하는 수고를 절약시켜준다.
+- memory footprint를 리빌드해야하는 대신, 하이버네이션은 애플리케이션이 멈추었던 곳(exactly where they left off)에서 pick up 가능하게 한다.
+- **새로운 EC2 생성시에만 활성화 여부를 설정**할 수 있고 이후에는 변경이 불가하다.
+- 인스턴스가 하이버네이션 상태일동안, EBS volumes과 붙어있는 EIP 주소에 대한 비용만 청구된다. 일반 Stopped 상태와 다름없음.
+
 ## Elastic IPs
 EC 인스턴스를 생성 시 __Auto-assign Public IP__ 설정을 할 수 있어, Public IP를 지정받을 수 있다.  
 하지만 이는 dynamic한 IP로서 매번 생성시 또는 중단 시에는 사라지고 재 시작시 변하게 된다.
