@@ -48,20 +48,40 @@ Easily collect, process, and analyze video and data streams in real time, so you
     -> Handle any amount of streaming data, and process it from hundreds of thousands of sources with low latency  
 
 ## Kinesis Services  
-- Kinesis Data Firehose  
-    -> fully managed service for delivering real-time streaming data to destinations such as S3, Redshift, ES, and Splunk  
-    -> You don't need to write applications or manage resources.  
-    -> You configure your data producers to send data to Kinesis Data Firehose, and it automatically delivers the data to the destination that you specified.  
-    -> __You can also configure Kinesis Data Firehose to transform your data before delivering it.__  
-- Kinesis Data Streams  
-- Kinesis Video Streams  
-- Kinesis data Analytics  
-    -> Enables you to quickly author SQL code that continuously reads, processes, and stores data in near real time.  
-    -> Using standard SQL queries on the streaming data, you can construct applications that transform and provide insights into your data.  
-    -> Followings are some of example scenarios for using Kinesis Data Analytics:  
-        -> __Generate time-series analytics__: You can calculate metrics over time windows, and then stream values to S3 or Redshift through a Kinesis data delivery stream.  
-        -> __Feed real-time dashboards__: You can send aggregated and processed streaming data results downstream to feed real-time dashboards.  
-        -> __Create real-time metrics__: You can create custom metrics and triggers for use in real-time mornitoring, notifications, and alarms.  
+### Kinesis Data Firehose(Delivery Stream) for 목적지로 transfer 및 람다를 통해 데이터 가공 작업도 가능.
+- fully managed service for **delivering real-time streaming data to destinations** such as S3, Redshift, ES, and Splunk.
+  - KDS와 달리 **Lambda를 목적지로 설정할 수 없다**.
+  - **downstream으로 보내기전 추가적 맞춤 데이터의 처리를 요청**하기 위하여 **Lambda 함수를 작성하고 Firehose와 통합**할수 는 있다.
+  - __You can also configure Kinesis Data Firehose to transform your data before delivering it.__  
+- You don't need to write applications or manage resources.  
+- You configure your data producers to send data to Kinesis Data Firehose, and it automatically delivers the data to the destination that you specified.  
+- Firehose vs Stream
+  - KDS와 달리 보관 기능 없음. 전송을 위한 서비스이므로.
+  - Firehose는 데이터를 직접 목적지로 전달해주는 개념. KDS는 Consumer들이 Stream에서 데이터를 꺼내와서 작업하는 개념.
+  - KDS는 여러 Consumer를 지정할 수 있는 open-ended model인 반면, Firehose는 단일 목적지를 갖는 close-ended 모델.
+  - KDS는 샤드 수를 조정하여 수동 스케일링, 반면 Firehose는 데이터 요청에 따라 자동 스케일링.
+
+### Kinesis Data Streams(KDS) for low latency 데이터 스트리밍 입구이자 저장소(메시징 큐와 비슷한).
+- massively scalable and durable real-time data streaming service.
+- KDS는 수백 수천의 원천소스로부터 초당 GB의 데이터를 지속적으로 캡쳐할 수 있다.
+- Lambda 함수를 KDS의 레코드를 처리하는데 사용할 수 있다.
+  - 디폴트로서 람다는 스트림에서 레코드가 가용하자마자 function을 호출한다.
+  - 동시에 각 샤드에서 10개의 배치까지 처리할 수 있다. 샤드당 concurrent batches의 수를 늘리더라도, partition-key level에서 **in-order processing**를 보장한다.
+- Firehose vs Stream
+  - KDS와 달리 보관 기능 없음. 전송을 위한 서비스이므로.
+  - Firehose는 데이터를 직접 목적지로 전달해주는 개념. KDS는 Consumer들이 Stream에서 데이터를 꺼내와서 작업하는 개념.
+  - KDS는 여러 Consumer를 지정할 수 있는 open-ended model인 반면, Firehose는 단일 목적지를 갖는 close-ended 모델.
+  - KDS는 샤드 수를 조정하여 수동 스케일링, 반면 Firehose는 데이터 요청에 따라 자동 스케일링.
+  
+### Kinesis Video Streams for 비디오 데이터 스트리밍
+
+### Kinesis data Analytics for 필터링, 집계 및 변환하는 고급 분석 기능
+- Enables you to quickly author SQL code that continuously reads, processes, and stores data in near real time.  
+- Using standard SQL queries on the streaming data, you can construct applications that transform and provide insights into your data.  
+- Followings are some of example scenarios for using Kinesis Data Analytics:  
+    - __Generate time-series analytics__: You can calculate metrics over time windows, and then stream values to S3 or Redshift through a Kinesis data delivery stream.  
+    - __Feed real-time dashboards__: You can send aggregated and processed streaming data results downstream to feed real-time dashboards.  
+    - __Create real-time metrics__: You can create custom metrics and triggers for use in real-time mornitoring, notifications, and alarms.  
 
 ## Scenarios
 1. You are working as a Solutions Architect for a startup in which you are tasked to develop a custom messaging service that will also be used to train their AI for an automatic response feature which they plan to implement in the future. Based on their research and tests, the service can **receive up to thousands of messages a day**, and all of these data are to be **sent to Amazon EMR** for further processing. It is crucial that **none of the messages will be lost**, **no duplicates will be produced** and that they are **processed in EMR in the same order as their arrival**.
