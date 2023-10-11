@@ -50,6 +50,14 @@ Dynamo DB
 ![dynamodb_streams](./images/dynamodb_streams.png)
 ![dynamodb_stream_with_triggers](./images/dynamodb_stream_with_trigger.png)
 
+## DAX - DynamoDB Accelerator
+- fully managed, highly available, in-memory cache for DynamoDB that delivers up to a 10x performance improvement (millisec -> microsec event at millions of requests per second)
+- **does all the heavy lifting required to add in-memory acceleration to your DynamoDB tables, without requiring developers to manage cache invalidation, data population, or cluster management.**
+
+## Auto Scaling
+- not enabled by default
+- manually set maximum provisioned read and write capacity, target utilization.
+
 ## Data Types for Attributes
 - __Scalar Types__
     - A scalar type can represent exaclty one value. 
