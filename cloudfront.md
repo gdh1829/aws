@@ -1,6 +1,24 @@
 CloudFront
 ===
 
+## Signed URLs and Singed Cookies
+- 프라이빗 컨텐트에 대한 제한적 유저의 접근 허용 방식
+- Signed URLs
+  - RTMP(Real Time Messaging Protocol) Distribution을 원할 경우.(Signed Cookies는 지원하지 않음)
+  - **개별 파일**에 대한 접근 제어를 원할 경우
+  - Cookie 방식을 클라이언트가 지원하지 않는 경우
+- Singed Cookies
+  - **복수의 제한적 파일**에 대한 접근 제어를 원할 경우
+  - 현재의 URLs을 변경하고 싶지 않은 경우
+
+## CloudFront를 사용한 비공개 컨텐츠를 안전하게 제공하려면,
+- 특별한 CloudFront signed URLs or signed cookies를 사용하여 유저들이 프라이빗 컨텐츠에 접근하도록 하기.
+- 유저들을 CloudFront URLs 사용(NOT S3 URLs)하여 S3 content에 접근하게 하게 한다. 
+  - **CloudFront URL을 요구할 필요는 없지만, 사용자가 signed URLs이나 signed cookies에 지정한 제한을 우회하지 못하도록 하는 것이 좋다!**
+    - **S3 버켓에 OAI(origin access identity)**를 셋팅함으로써 가능하다.
+    - 또한 웹사이트 엔드포인트로 구성된 S3 버킷이나 private HTTP server에 대한 custom headers를 설정할 수도 있다.
+    - 모든 객체와 버킷은 기본적으로 프라이빗이다. presigned urls은 유저가 특정 오브젝트를 버킷에 업로드할 수 있도록 하려는 경우 유용하지만, AWS 보안 자격증명이나 권한이 필요하지 않은 경우에 유용하다.
+
 ## Lambda@Edge
 - a feature of Amazon CloudFront that lets you run code closer to users of your application, which improves performance and reduces latency.  
 - With Lambda@Edge, you don't have to provision or manage infrastructure in multiple locations around the world. 
